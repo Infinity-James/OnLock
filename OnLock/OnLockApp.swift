@@ -7,11 +7,10 @@
 
 import SwiftUI
 
+//  MARK: App
 @main
 struct OnLockApp: App {
     var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+        WindowGroup { ContentView() }
     }
 }
