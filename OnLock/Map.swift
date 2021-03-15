@@ -9,23 +9,12 @@ import MapKit
 import SwiftUI
 import UIKit
 
-struct New : UIViewControllerRepresentable {
-	func makeUIViewController(context: Context) -> UINavigationController {
-
-	}
-
-	func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
-		<#code#>
-	}
-}
-
 //  MARK: Map
 public struct Map: UIViewControllerRepresentable {
 	@ObservedObject private var data = MapData()
 
 	public func makeUIViewController(context: Context) -> MapView {
 		data.load()
-
 		return MapView()
 	}
 
@@ -72,26 +61,32 @@ public final class MapView: UIViewController {
 	func configure(with data: MapData) {
 		self.data = data
 		data.addPolygons(to: map)
-		map.setVisibleMapRect(data.boundingRect,
-							  edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
-							  animated: true)
+        data.addPolyLines(to: map)
+//		map.setVisibleMapRect(data.boundingRect,
+//							  edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
+//							  animated: true)
 	}
 }
 
 //  MARK: MKMapViewDelegate
 extension MapView: MKMapViewDelegate {
 	public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-		guard let data = data,
-			  let polygon = overlay as? MKPolygon,
-			  let track = data.track(for: polygon) else {
+		guard let data = data else {
 			return MKOverlayRenderer(overlay: overlay)
 		}
-
-		let renderer = MKPolygonRenderer(overlay: polygon)
-		renderer.lineWidth = 1
-		renderer.strokeColor = track.color.uiColor
-		renderer.fillColor = track.color.uiColor.withAlphaComponent(0.2)
-		return renderer
+        if let polygon = overlay as? MKPolygon, let track = data.track(for: polygon) {
+            let renderer = MKPolygonRenderer(overlay: polygon)
+            renderer.lineWidth = 1
+            renderer.strokeColor = track.color.uiColor
+            renderer.fillColor = track.color.uiColor.withAlphaComponent(0.2)
+            return renderer
+        } else if overlay is MKPolyline {
+            let renderer = MKPolylineRenderer(overlay: overlay)
+            renderer.lineWidth = 1
+            renderer.strokeColor = UIColor.systemPink
+            return renderer
+        }
+        return MKOverlayRenderer(overlay: overlay)
 	}
 }
 

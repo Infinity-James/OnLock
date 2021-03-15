@@ -95,6 +95,8 @@
 		1AE86B7925FA2A76004891EC /* TrackReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE86B7825FA2A76004891EC /* TrackReader.swift */; };
 		1AE86B7C25FA2B0B004891EC /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE86B7B25FA2B0B004891EC /* TestData.swift */; };
 		1AE86BAE25FD0356004891EC /* MapData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE86BAD25FD0356004891EC /* MapData.swift */; };
+		F69C462825FF92BF00D773C5 /* LiveMapTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69C462725FF92BF00D773C5 /* LiveMapTrack.swift */; };
+		F6C2B03D25FF9C5600CE6D1B /* LiveTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6C2B03C25FF9C5600CE6D1B /* LiveTrack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -188,6 +190,8 @@
 		1AE86B7825FA2A76004891EC /* TrackReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackReader.swift; sourceTree = "<group>"; };
 		1AE86B7B25FA2B0B004891EC /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		1AE86BAD25FD0356004891EC /* MapData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapData.swift; sourceTree = "<group>"; };
+		F69C462725FF92BF00D773C5 /* LiveMapTrack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMapTrack.swift; sourceTree = "<group>"; };
+		F6C2B03C25FF9C5600CE6D1B /* LiveTrack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTrack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,6 +237,8 @@
 				1AE86B7B25FA2B0B004891EC /* TestData.swift */,
 				1AE86B6E25FA28C4004891EC /* Track.swift */,
 				1AE86B7825FA2A76004891EC /* TrackReader.swift */,
+				F69C462725FF92BF00D773C5 /* LiveMapTrack.swift */,
+				F6C2B03C25FF9C5600CE6D1B /* LiveTrack.swift */,
 			);
 			path = OnLock;
 			sourceTree = "<group>";
@@ -482,8 +488,10 @@
 				1AE86BAE25FD0356004891EC /* MapData.swift in Sources */,
 				1AE86AD025FA2646004891EC /* Map.swift in Sources */,
 				1AE86AC025FA25F1004891EC /* OnLockApp.swift in Sources */,
+				F6C2B03D25FF9C5600CE6D1B /* LiveTrack.swift in Sources */,
 				1AE86B6F25FA28C4004891EC /* Track.swift in Sources */,
 				1AE86B7325FA29FD004891EC /* Coordinate.swift in Sources */,
+				F69C462825FF92BF00D773C5 /* LiveMapTrack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -613,7 +621,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"OnLock/Preview Content\"";
-				DEVELOPMENT_TEAM = ZFDEX86BMA;
+				DEVELOPMENT_TEAM = 98D7R8264B;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = OnLock/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -635,7 +643,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"OnLock/Preview Content\"";
-				DEVELOPMENT_TEAM = ZFDEX86BMA;
+				DEVELOPMENT_TEAM = 98D7R8264B;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = OnLock/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
