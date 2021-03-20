@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A62AA362602165100BC19C9 /* Vector2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A62AA352602165100BC19C9 /* Vector2D.swift */; };
+		1A62AA3A26021B8600BC19C9 /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A62AA3926021B8600BC19C9 /* Graph.swift */; };
 		1AE86AC025FA25F1004891EC /* OnLockApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE86ABF25FA25F1004891EC /* OnLockApp.swift */; };
 		1AE86AC225FA25F1004891EC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE86AC125FA25F1004891EC /* ContentView.swift */; };
 		1AE86AC425FA25F2004891EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AE86AC325FA25F2004891EC /* Assets.xcassets */; };
@@ -99,6 +101,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A62AA352602165100BC19C9 /* Vector2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vector2D.swift; sourceTree = "<group>"; };
+		1A62AA3926021B8600BC19C9 /* Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
 		1AE86ABC25FA25F1004891EC /* OnLock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnLock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AE86ABF25FA25F1004891EC /* OnLockApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLockApp.swift; sourceTree = "<group>"; };
 		1AE86AC125FA25F1004891EC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -222,13 +226,15 @@
 		1AE86ABE25FA25F1004891EC /* OnLock */ = {
 			isa = PBXGroup;
 			children = (
-				1AE86BAD25FD0356004891EC /* MapData.swift */,
+				1A62AA3926021B8600BC19C9 /* Graph.swift */,
 				1AE86AC325FA25F2004891EC /* Assets.xcassets */,
 				1AE86AC125FA25F1004891EC /* ContentView.swift */,
 				1AE86B7225FA29FD004891EC /* Coordinate.swift */,
+				1A62AA352602165100BC19C9 /* Vector2D.swift */,
 				1AE86B7525FA2A36004891EC /* Helpers.swift */,
 				1AE86AC825FA25F2004891EC /* Info.plist */,
 				1AE86ACF25FA2646004891EC /* Map.swift */,
+				1AE86BAD25FD0356004891EC /* MapData.swift */,
 				1AE86ABF25FA25F1004891EC /* OnLockApp.swift */,
 				1AE86AC525FA25F2004891EC /* Preview Content */,
 				1AE86AD225FA2880004891EC /* Test Data */,
@@ -482,8 +488,10 @@
 				1AE86AC225FA25F1004891EC /* ContentView.swift in Sources */,
 				1AE86B7625FA2A36004891EC /* Helpers.swift in Sources */,
 				1AE86B7C25FA2B0B004891EC /* TestData.swift in Sources */,
+				1A62AA362602165100BC19C9 /* Vector2D.swift in Sources */,
 				1AE86BAE25FD0356004891EC /* MapData.swift in Sources */,
 				1AE86AD025FA2646004891EC /* Map.swift in Sources */,
+				1A62AA3A26021B8600BC19C9 /* Graph.swift in Sources */,
 				1AE86AC025FA25F1004891EC /* OnLockApp.swift in Sources */,
 				1AE86B6F25FA28C4004891EC /* Track.swift in Sources */,
 				1AE86B7325FA29FD004891EC /* Coordinate.swift in Sources */,
