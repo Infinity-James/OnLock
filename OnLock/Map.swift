@@ -9,16 +9,6 @@ import MapKit
 import SwiftUI
 import UIKit
 
-struct New : UIViewControllerRepresentable {
-	func makeUIViewController(context: Context) -> UINavigationController {
-
-	}
-
-	func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
-		<#code#>
-	}
-}
-
 //  MARK: Map
 public struct Map: UIViewControllerRepresentable {
 	@ObservedObject private var data = MapData()
@@ -30,7 +20,6 @@ public struct Map: UIViewControllerRepresentable {
 	}
 
 	public func updateUIViewController(_ map: MapView, context: Context) {
-		print(data)
 		map.configure(with: data)
 	}
 }
@@ -75,23 +64,45 @@ public final class MapView: UIViewController {
 		map.setVisibleMapRect(data.boundingRect,
 							  edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
 							  animated: true)
+		let graph = measure("Build graph") { data.graph }
+		render(graph)
+	}
+
+	func render(_ graph: Graph) {
+		guard let startingPoint = graph.edges.keys.randomElement() else { return }
+		let steps = graph.debug_connectedVertices(from: startingPoint)
+
+		func draw(_ remainingSteps: ArraySlice<[(Coordinate, Coordinate)]>) {
+			guard let step = remainingSteps.first else { return }
+			for edge in step {
+				map.addOverlay(MKPolyline(coordinates: [CLLocationCoordinate2D(edge.0), CLLocationCoordinate2D(edge.1)], count: 2))
+			}
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+				draw(remainingSteps.dropFirst())
+			}
+		}
+
+		draw(steps[...])
 	}
 }
 
 //  MARK: MKMapViewDelegate
 extension MapView: MKMapViewDelegate {
 	public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-		guard let data = data,
-			  let polygon = overlay as? MKPolygon,
-			  let track = data.track(for: polygon) else {
-			return MKOverlayRenderer(overlay: overlay)
-		}
+		guard let data = data else { return MKOverlayRenderer(overlay: overlay) }
+		if let polygon = overlay as? MKPolygon, let track = data.track(for: polygon) {
+			let renderer = MKPolygonRenderer(overlay: polygon)
+			renderer.lineWidth = 1
+			renderer.strokeColor = track.color.uiColor
+			renderer.fillColor = track.color.uiColor.withAlphaComponent(0.2)
+			return renderer
+		} else if let line = overlay as? MKPolyline {
+			let renderer = MKPolylineRenderer(polyline: line)
+			renderer.strokeColor = .black
+			renderer.lineWidth = 4
+			return renderer
+		} else { return MKOverlayRenderer(overlay: overlay) }
 
-		let renderer = MKPolygonRenderer(overlay: polygon)
-		renderer.lineWidth = 1
-		renderer.strokeColor = track.color.uiColor
-		renderer.fillColor = track.color.uiColor.withAlphaComponent(0.2)
-		return renderer
 	}
 }
 

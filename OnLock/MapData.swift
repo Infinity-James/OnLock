@@ -13,6 +13,7 @@ import SwiftUI
 //  MARK: Map Data
 internal final class MapData: ObservableObject {
 	@Published private var tracks: [MapTrack] = []
+	public var graph: Graph { .build(from: tracks.map(\.track)) }
 	internal var boundingRect: MKMapRect {
 		tracks
 			.map { $0.polygon.boundingMapRect }
@@ -22,6 +23,7 @@ internal final class MapData: ObservableObject {
 	internal func load() {
 		DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
 			let loadedTracks = Track.loadTestData()
+				.filter { $0.color == .pink }
 				.map { track in MapTrack(track: track, polygon: MKPolygon(coordinates: track.clCoordinates, count: track.coordinates.count)) }
 
 			DispatchQueue.main.async { tracks = loadedTracks }
@@ -65,15 +67,5 @@ private struct MapTrack: Hashable {
 private extension Track {
 	var clCoordinates: [CLLocationCoordinate2D] {
 		coordinates.map { CLLocationCoordinate2D($0.coordinate) }
-	}
-}
-//  MARK: Coordinate + Core Lcoation
-internal extension CLLocationCoordinate2D {
-	init(_ coordinate: Coordinate) {
-		self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
-	}
-
-	func distance(to other: CLLocationCoordinate2D) -> CLLocationDistance {
-		MKMapPoint(self).distance(to: MKMapPoint(other))
 	}
 }
