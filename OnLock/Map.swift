@@ -62,9 +62,6 @@ public final class MapView: UIViewController {
 		self.data = data
 		data.addPolygons(to: map)
         data.addPolyLines(to: map)
-//		map.setVisibleMapRect(data.boundingRect,
-//							  edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
-//							  animated: true)
 	}
 }
 
@@ -74,19 +71,24 @@ extension MapView: MKMapViewDelegate {
 		guard let data = data else {
 			return MKOverlayRenderer(overlay: overlay)
 		}
+        
+        let renderer: MKOverlayRenderer
         if let polygon = overlay as? MKPolygon, let track = data.track(for: polygon) {
-            let renderer = MKPolygonRenderer(overlay: polygon)
-            renderer.lineWidth = 1
-            renderer.strokeColor = track.color.uiColor
-            renderer.fillColor = track.color.uiColor.withAlphaComponent(0.2)
-            return renderer
+            let polygonRender = MKPolygonRenderer(overlay: polygon)
+            polygonRender.lineWidth = 1
+            polygonRender.strokeColor = track.color.uiColor
+            polygonRender.fillColor = track.color.uiColor.withAlphaComponent(0.2)
+            renderer = polygonRender
         } else if overlay is MKPolyline {
-            let renderer = MKPolylineRenderer(overlay: overlay)
-            renderer.lineWidth = 1
-            renderer.strokeColor = UIColor.systemPink
-            return renderer
+            let lineRenderer = MKPolylineRenderer(overlay: overlay)
+            lineRenderer.lineWidth = 1.5
+            lineRenderer.strokeColor = UIColor.systemPink
+            renderer = lineRenderer
+        } else {
+            renderer = MKOverlayRenderer(overlay: overlay)
         }
-        return MKOverlayRenderer(overlay: overlay)
+        
+        return renderer
 	}
 }
 
