@@ -53,7 +53,7 @@ public extension Graph {
 import MapKit
 
 private typealias Segment = (Coordinate, Coordinate)
-private typealias SegmentRegion = (segment: Segment, box: MKMapRect)
+private typealias BoundedSegment = (segment: Segment, box: MKMapRect)
 
 private extension Graph {
 	var allSegments: [SegmentRegion] {
@@ -69,7 +69,7 @@ private extension Graph {
 	}
 }
 
-private extension Array where Element == Segment {
+private extension Array where Element == BoundedSegment {
 	func closeEnough(to coordinate: Coordinate) -> Coordinate {
 		guard !isEmpty else { return coordinate }
 		let epsilon: CLLocationDistance = 7
