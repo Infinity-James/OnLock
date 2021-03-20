@@ -40,7 +40,9 @@ public extension Graph {
 	static func build(from tracks: [Track]) -> Graph {
 		var graph = Graph()
 		for track in tracks {
-			let segments = graph.allSegments
+			let polygon = MKPolygon(coordinates: track.clCoordinates, count: track.coordinates.count)
+			let rect = polygon.boundingMapRect
+			let segments = graph.allSegments.filter { _, boundingBox in boundingBox.intersects(rect) }
 			for (from, to) in zip(track.coordinates, track.coordinates.dropFirst() + [track.coordinates[0]]) {
 				graph.addEdge(from: segments.closeEnough(to: from.coordinate),
 							  to: segments.closeEnough(to: to.coordinate))
@@ -54,15 +56,19 @@ import MapKit
 
 private typealias Segment = (Coordinate, Coordinate)
 private typealias BoundedSegment = (segment: Segment, box: MKMapRect)
+private let epsilon: CLLocationDistance = 7
 
 private extension Graph {
-	var allSegments: [SegmentRegion] {
-		edges.flatMap { source, destinations in
+	var allSegments: [BoundedSegment] {
+		guard !edges.isEmpty else { return [] }
+		let mapPointsPerMeter = MKMapPointsPerMeterAtLatitude(edges.first!.key.latitude)
+		let inset = mapPointsPerMeter * epsilon
+		return edges.flatMap { source, destinations in
 			destinations.map {
 				let segment = (source, $0.coordinate)
 				let rect1 = MKMapRect(origin: MKMapPoint(CLLocationCoordinate2D(segment.0)), size: .init())
 				let rect2 = MKMapRect(origin: MKMapPoint(CLLocationCoordinate2D(segment.1)), size: .init())
-				let rect = rect1.union(rect2)
+				let rect = rect1.union(rect2).insetBy(dx: -inset, dy: -inset)
 				return (segment, rect)
 			}
 		}
@@ -71,11 +77,13 @@ private extension Graph {
 
 private extension Array where Element == BoundedSegment {
 	func closeEnough(to coordinate: Coordinate) -> Coordinate {
-		guard !isEmpty else { return coordinate }
-		let epsilon: CLLocationDistance = 7
-		let (segment, distance) = map { segment in (segment: segment, distance: coordinate.distance(to: segment)) }
-			.min { $0.distance < $1.distance }!
-		if distance < epsilon {
+		let mapPoint = MKMapPoint(CLLocationCoordinate2D(coordinate))
+		let filtered = filter { segment, box in box.contains(mapPoint) }
+		guard !filtered.isEmpty else { return coordinate }
+		if let (segment, distance) = filtered
+			.map({ segment, box in (segment: segment, distance: coordinate.distance(to: segment)) })
+			.min(by: { $0.distance < $1.distance }),
+		   distance < epsilon {
 			return segment.0
 		} else { return coordinate }
 	}

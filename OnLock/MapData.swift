@@ -23,7 +23,7 @@ internal final class MapData: ObservableObject {
 	internal func load() {
 		DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
 			let loadedTracks = Track.loadTestData()
-				.filter { $0.color == .pink }
+//				.filter { $0.color == .pink }
 				.map { track in MapTrack(track: track, polygon: MKPolygon(coordinates: track.clCoordinates, count: track.coordinates.count)) }
 
 			DispatchQueue.main.async { tracks = loadedTracks }
@@ -64,7 +64,7 @@ private struct MapTrack: Hashable {
 }
 
 //  MARK: Track + Core Location
-private extension Track {
+internal extension Track {
 	var clCoordinates: [CLLocationCoordinate2D] {
 		coordinates.map { CLLocationCoordinate2D($0.coordinate) }
 	}
