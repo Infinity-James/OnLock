@@ -10,22 +10,23 @@ import Foundation
 import MapKit
 import SwiftUI
 
-//  MARK: Map Data
+// MARK: Map Data
 internal final class MapData: NSObject, ObservableObject {
 	@Published private var tracks: [MapTrack] = []
     @Published private var liveMapTrack: LiveMapTrack?
-	internal var boundingRect: MKMapRect {
-		tracks
-			.map { $0.polygon.boundingMapRect }
-			.reduce(MKMapRect.null) { $0.union($1) }
-	}
-    private let locationManager: CLLocationManager = {
-        let locationManager = CLLocationManager()
-        locationManager.requestAlwaysAuthorization()
-        locationManager.desiredAccuracy = 15
-        return locationManager
+    
+    let minimumLiveTrackDistance: Double = 5.0
+    private lazy var locationTracker: LocationTracker = {
+        let locationTracker = LocationTracker(meterAccuracy: 15, minimumTrackDistance: minimumLiveTrackDistance)
+        locationTracker.delegate = self
+        return locationTracker
     }()
-    private let minimumLiveTrackDistance: Double = 5
+    internal var boundingRect: MKMapRect {
+        tracks
+            .map { $0.polygon.boundingMapRect }
+            .reduce(MKMapRect.null) { $0.union($1) }
+    }
+    
 
 	internal func load() {
 		DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
@@ -33,8 +34,8 @@ internal final class MapData: NSObject, ObservableObject {
 				.map { track in MapTrack(track: track, polygon: MKPolygon(coordinates: track.clCoordinates, count: track.coordinates.count)) }
 			DispatchQueue.main.async { tracks = loadedTracks }
 		}
-        locationManager.delegate = self
-        DispatchQueue.main.async { [unowned self] in locationManager.startUpdatingLocation() }
+        
+        DispatchQueue.main.async { [unowned self] in locationTracker.startUpdatingLocation() }
 	}
 
 	internal func addPolygons(to map: MKMapView) {
@@ -88,27 +89,14 @@ internal final class MapData: NSObject, ObservableObject {
         
     }
 }
-//  MARK: Core Location Manager Delegate
-extension MapData: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let newLocation = locations.last,
-              newLocation.horizontalAccuracy < manager.desiredAccuracy else {
-            return
-        }
-        
+// MARK: Core Location Manager Delegate
+extension MapData: LocationTrackerDelegate {
+    func valueChanged(for coordinates: [CLLocationCoordinate2D]) {
         guard liveMapTrack != nil else {
-            liveMapTrack = LiveMapTrack(coordinates: [newLocation.coordinate])
+            self.liveMapTrack = LiveMapTrack(coordinates: coordinates)
             return
         }
-        
-        guard let liveMapTrack = liveMapTrack,
-              let previousCoordinate = liveMapTrack.coordinates.last, 
-              newLocation.coordinate.distance(to: previousCoordinate) > minimumLiveTrackDistance else {
-            return
-        }
-        
-        self.liveMapTrack!.coordinates.append(newLocation.coordinate)
-        checkForConnection(liveMapTrack: liveMapTrack)
+        liveMapTrack!.coordinates = coordinates
     }
 }
 
