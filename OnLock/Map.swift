@@ -61,6 +61,7 @@ public final class MapView: UIViewController {
 	func configure(with data: MapData) {
 		self.data = data
 		data.addPolygons(to: map)
+        data.addPolyLines(to: map)
 		map.setVisibleMapRect(data.boundingRect,
 							  edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
 							  animated: true)
