@@ -20,6 +20,12 @@ internal final class MapData: NSObject, ObservableObject {
         let locationTracker = LocationTracker(meterAccuracy: 15, minimumTrackDistance: minimumLiveTrackDistance)
         locationTracker.delegate = self
         return locationTracker
+	public var graph: Graph { .build(from: tracks.map(\.track)) }
+    private let locationManager: CLLocationManager = {
+        let locationManager = CLLocationManager()
+        locationManager.requestAlwaysAuthorization()
+        locationManager.desiredAccuracy = 15
+        return locationManager
     }()
     internal var boundingRect: MKMapRect {
         tracks
@@ -31,7 +37,9 @@ internal final class MapData: NSObject, ObservableObject {
 	internal func load() {
 		DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
 			let loadedTracks = Track.loadTestData()
+				.filter { $0.color == .pink }
 				.map { track in MapTrack(track: track, polygon: MKPolygon(coordinates: track.clCoordinates, count: track.coordinates.count)) }
+
 			DispatchQueue.main.async { tracks = loadedTracks }
 		}
         
@@ -122,16 +130,5 @@ private extension MapTrack {
 private extension Track {
 	var clCoordinates: [CLLocationCoordinate2D] {
 		coordinates.map { CLLocationCoordinate2D($0.coordinate) }
-	}
-}
-
-//  MARK: Coordinate + Core Lcoation
-internal extension CLLocationCoordinate2D {
-	init(_ coordinate: Coordinate) {
-		self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
-	}
-
-	func distance(to other: CLLocationCoordinate2D) -> CLLocationDistance {
-		MKMapPoint(self).distance(to: MKMapPoint(other))
 	}
 }
