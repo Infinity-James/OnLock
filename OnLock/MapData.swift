@@ -13,11 +13,18 @@ import SwiftUI
 //  MARK: Map Data
 internal final class MapData: ObservableObject {
 	@Published private var tracks: [MapTrack] = []
-	public var graph: Graph { .build(from: tracks.map(\.track)) }
+	public var graph: Graph?
 	internal var boundingRect: MKMapRect {
 		tracks
 			.map { $0.polygon.boundingMapRect }
 			.reduce(MKMapRect.null) { $0.union($1) }
+	}
+	private var disposables = Set<AnyCancellable>()
+
+	init() {
+		$tracks
+			.sink { [unowned self] tracks in graph = .build(from: tracks.map(\.track)) }
+			.store(in: &disposables)
 	}
 
 	internal func load() {
@@ -26,7 +33,10 @@ internal final class MapData: ObservableObject {
 //				.filter { $0.color == .pink }
 				.map { track in MapTrack(track: track, polygon: MKPolygon(coordinates: track.clCoordinates, count: track.coordinates.count)) }
 
-			DispatchQueue.main.async { tracks = loadedTracks }
+			DispatchQueue.main.async {
+				print("Loaded: \(loadedTracks.count)")
+				tracks = loadedTracks
+			}
 		}
 	}
 
@@ -38,22 +48,20 @@ internal final class MapData: ObservableObject {
 		tracks.first(where: { $0.polygon == polygon })?.track
 	}
 
-	private typealias TrackPointDistance = (track: Track, point: CLLocationCoordinate2D, distance: CLLocationDistance)
-	internal typealias TrackPoint = (track: Track, point: CLLocationCoordinate2D)
+	private var tappedPoints: [Coordinate] = []
 
-	internal func closest(to coordinate: CLLocationCoordinate2D) -> TrackPoint? {
-		let closest = tracks
-			.compactMap { track -> TrackPointDistance? in
-				let closest = track.track.clCoordinates
-					.map { (point: $0, distance: $0.distance(to: coordinate)) }
-					.min { c1, c2 in c1.distance < c2.distance }
-				return closest.flatMap { (track.track, $0.point, $0.distance) }
-			}
-			.min { tc1, tc2 in tc1.distance < tc2.distance }
+	internal func tapped(_ coordinate: CLLocationCoordinate2D) -> [Coordinate]? {
+		guard let graph = graph else { return nil }
+		let coord = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
+		let trackPoint = graph.edges.keys
+			.map { (point: $0, distance: $0.distance(to: coord)) }
+			.min { c1, c2 in c1.distance < c2.distance }
+		guard let closest = trackPoint?.point else { return nil }
+		tappedPoints.append(closest)
 
-		if let closest = closest {
-			return (closest.track, closest.point)
-		} else { return nil }
+		guard tappedPoints.count >= 2 else { return nil }
+
+		return graph.shortestPath(from: tappedPoints[tappedPoints.endIndex - 2], to: tappedPoints[tappedPoints.endIndex - 1])
 	}
 }
 

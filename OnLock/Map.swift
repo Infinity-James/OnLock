@@ -47,15 +47,10 @@ public final class MapView: UIViewController {
 		guard let data = data else { return }
 		let location = recognizer.location(in: map)
 		let tapCoordinate = map.convert(location, toCoordinateFrom: map)
-		guard let (track, closestPoint) = data.closest(to: tapCoordinate) else { return }
-
-		let closestInPoints = map.convert(closestPoint, toPointTo: map)
-		if closestInPoints.distance(to: location) < (44 / 2) {
-			let annotation = MKPointAnnotation()
-			annotation.coordinate = closestPoint
-			annotation.title = track.name
-			map.addAnnotation(annotation)
-		}
+		guard let shortestPath = data.tapped(tapCoordinate) else { return }
+		let coordinates = shortestPath.map(CLLocationCoordinate2D.init)
+		let line = MKPolyline(coordinates: coordinates, count: coordinates.count)
+		map.addOverlay(line)
 	}
 
 	func configure(with data: MapData) {
@@ -64,8 +59,7 @@ public final class MapView: UIViewController {
 		map.setVisibleMapRect(data.boundingRect,
 							  edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
 							  animated: true)
-		let graph = measure("Build graph") { data.graph }
-		render(graph)
+//		render(data.graph)
 	}
 
 	func render(_ graph: Graph) {

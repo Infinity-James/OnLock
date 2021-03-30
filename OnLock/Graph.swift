@@ -75,6 +75,43 @@ private extension Graph {
 	}
 }
 
+//  MARK: Distance
+public extension Graph {
+	private typealias DistanceNode = (distance: CLLocationDistance, previous: Coordinate)
+	func shortestPath(from: Coordinate, to: Coordinate) -> [Coordinate]? {
+		assert(edges[from] != nil)
+		assert(edges[to] != nil)
+		var seen: Set<Coordinate> = []
+		var distances: [Coordinate: DistanceNode] = [:]
+		var queue: [(coordinate: Coordinate, distance: CLLocationDistance)] = [(from, 0)]
+		while let (coordinate, distance) = queue.popLast() {
+			guard !seen.contains(coordinate) else { continue }
+			seen.insert(coordinate)
+
+			for destination in edges[coordinate] ?? [] where !seen.contains(destination.coordinate) {
+				let newDistance = distance + destination.distance
+				if let existingDistance = distances[destination.coordinate]?.distance,
+				   existingDistance < newDistance { continue }
+				distances[destination.coordinate] = (newDistance, coordinate)
+				queue.append((destination.coordinate, newDistance))
+			}
+
+			queue.sort { $0.distance > $1.distance }
+		}
+
+		guard var current = distances[to]?.previous else { return nil }
+		var result = [to]
+		while current != from {
+			result.append(current)
+			current = distances[current]!.previous
+		}
+		result.append(from)
+
+		print(result)
+		return result.reversed()
+	}
+}
+
 private extension Array where Element == BoundedSegment {
 	func closeEnough(to coordinate: Coordinate) -> Coordinate {
 		let mapPoint = MKMapPoint(CLLocationCoordinate2D(coordinate))
