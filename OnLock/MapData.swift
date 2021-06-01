@@ -52,7 +52,11 @@ internal final class MapData: NSObject, ObservableObject {
 	}
     
     internal func addPolyLines(to map: MKMapView) {
-        guard let liveMapTrack = liveMapTrack else { return }
+        guard let liveMapTrack = liveMapTrack else {
+            let polyLines = map.overlays.filter { $0 is MKPolyline}
+            map.removeOverlays(polyLines)
+            return
+        }
         
         let line = MKPolyline(coordinates: liveMapTrack.coordinates, count: liveMapTrack.coordinates.count)
         map.addOverlay(line)
