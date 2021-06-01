@@ -20,6 +20,7 @@ internal final class MapData: NSObject, ObservableObject {
         let locationTracker = LocationTracker(meterAccuracy: 15, minimumTrackDistance: minimumLiveTrackDistance)
         locationTracker.delegate = self
         return locationTracker
+    }()
 	public var graph: Graph { .build(from: tracks.map(\.track)) }
     private let locationManager: CLLocationManager = {
         let locationManager = CLLocationManager()
@@ -97,6 +98,7 @@ internal final class MapData: NSObject, ObservableObject {
         
     }
 }
+    
 // MARK: Core Location Manager Delegate
 extension MapData: LocationTrackerDelegate {
     func valueChanged(for coordinates: [CLLocationCoordinate2D]) {
