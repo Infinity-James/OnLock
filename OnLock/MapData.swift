@@ -36,13 +36,13 @@ internal final class MapData: NSObject, ObservableObject {
     
 
 	internal func load() {
-		DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
-			let loadedTracks = Track.loadTestData()
-				.filter { $0.color == .pink }
-				.map { track in MapTrack(track: track, polygon: MKPolygon(coordinates: track.clCoordinates, count: track.coordinates.count)) }
-
-			DispatchQueue.main.async { tracks = loadedTracks }
-		}
+//		DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
+//			let loadedTracks = Track.loadTestData()
+//				.filter { $0.color == .pink }
+//				.map { track in MapTrack(track: track, polygon: MKPolygon(coordinates: track.clCoordinates, count: track.coordinates.count)) }
+//
+//			DispatchQueue.main.async { tracks = loadedTracks }
+//		}
         
         DispatchQueue.main.async { [unowned self] in locationTracker.startUpdatingLocation() }
 	}
@@ -84,18 +84,16 @@ internal final class MapData: NSObject, ObservableObject {
 		} else { return nil }
 	}
     
-    internal func checkForConnection(liveMapTrack: LiveMapTrack) {
-        guard let firstCoordinate = liveMapTrack.coordinates.first,
-              let lastCoordinate = liveMapTrack.coordinates.last,
-              liveMapTrack.coordinates.count > 3  else { return }
+    internal func checkForConnection(inTrack coordinates: [CLLocationCoordinate2D]) -> Bool {
+        guard let firstCoordinate = coordinates.first,
+              let lastCoordinate = coordinates.last,
+              coordinates.count > 3  else { return false }
         
         let distance = firstCoordinate.distance(to: lastCoordinate)
-        if distance < minimumLiveTrackDistance {
-            self.liveMapTrack = nil
-            let mapTrack = MapTrack(coordinates: liveMapTrack.coordinates)
-            tracks.append(mapTrack)
+        guard distance < minimumLiveTrackDistance * 1.5 else {
+            return false
         }
-        
+        return true
     }
 }
     
@@ -106,7 +104,13 @@ extension MapData: LocationTrackerDelegate {
             self.liveMapTrack = LiveMapTrack(coordinates: coordinates)
             return
         }
-        liveMapTrack!.coordinates = coordinates
+        if checkForConnection(inTrack: coordinates) {
+            liveMapTrack = nil
+            let mapTrack = MapTrack(coordinates: coordinates)
+            tracks.append(mapTrack)
+        } else {
+            self.liveMapTrack!.coordinates = coordinates
+        }
     }
 }
 

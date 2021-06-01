@@ -49,13 +49,15 @@ extension LocationTracker: CLLocationManagerDelegate {
             return
         }
         
-        guard locations.count > 1 else {
+        guard !coordinates.isEmpty else {
             coordinates.append(newLocation.coordinate)
             return
         }
         
-        let previousLocation = locations[locations.count - 2]
-        guard newLocation.distance(from: previousLocation) >= minimumTrackDistance else {
+        
+        guard let previousLocation = coordinates.last,
+              newLocation.coordinate.distance(to: previousLocation) != 0,
+              newLocation.coordinate.distance(to: previousLocation) >= minimumTrackDistance else {
             return
         }
         
