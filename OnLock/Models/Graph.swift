@@ -69,11 +69,11 @@ private extension Graph {
 	}
 }
 
-private extension Array where Element == Segment {
+private extension Array where Element == SegmentRegion {
 	func closeEnough(to coordinate: Coordinate) -> Coordinate {
 		guard !isEmpty else { return coordinate }
 		let epsilon: CLLocationDistance = 7
-		let (segment, distance) = map { segment in (segment: segment, distance: coordinate.distance(to: segment)) }
+        let (segment, distance) = map { segmentRegion in (segment: segmentRegion.segment, distance: coordinate.distance(to: segmentRegion.segment)) }
 			.min { $0.distance < $1.distance }!
 		if distance < epsilon {
 			return segment.0

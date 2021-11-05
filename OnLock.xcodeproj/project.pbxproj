@@ -97,6 +97,7 @@
 		1AE86B7925FA2A76004891EC /* TrackReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE86B7825FA2A76004891EC /* TrackReader.swift */; };
 		1AE86B7C25FA2B0B004891EC /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE86B7B25FA2B0B004891EC /* TestData.swift */; };
 		1AE86BAE25FD0356004891EC /* MapData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE86BAD25FD0356004891EC /* MapData.swift */; };
+		F669BEC72607623E00065AC1 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669BEC62607623E00065AC1 /* LocationTracker.swift */; };
 		F69C462825FF92BF00D773C5 /* LiveMapTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69C462725FF92BF00D773C5 /* LiveMapTrack.swift */; };
 /* End PBXBuildFile section */
 
@@ -193,6 +194,7 @@
 		1AE86B7825FA2A76004891EC /* TrackReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackReader.swift; sourceTree = "<group>"; };
 		1AE86B7B25FA2B0B004891EC /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		1AE86BAD25FD0356004891EC /* MapData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapData.swift; sourceTree = "<group>"; };
+		F669BEC62607623E00065AC1 /* LocationTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
 		F69C462725FF92BF00D773C5 /* LiveMapTrack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMapTrack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -226,11 +228,9 @@
 		1AE86ABE25FA25F1004891EC /* OnLock */ = {
 			isa = PBXGroup;
 			children = (
-				1A62AA3926021B8600BC19C9 /* Graph.swift */,
+				F63BCBFC26667CE300BDC2CC /* Models */,
 				1AE86AC325FA25F2004891EC /* Assets.xcassets */,
 				1AE86AC125FA25F1004891EC /* ContentView.swift */,
-				1AE86B7225FA29FD004891EC /* Coordinate.swift */,
-				1A62AA352602165100BC19C9 /* Vector2D.swift */,
 				1AE86B7525FA2A36004891EC /* Helpers.swift */,
 				1AE86AC825FA25F2004891EC /* Info.plist */,
 				1AE86ACF25FA2646004891EC /* Map.swift */,
@@ -238,10 +238,6 @@
 				1AE86ABF25FA25F1004891EC /* OnLockApp.swift */,
 				1AE86AC525FA25F2004891EC /* Preview Content */,
 				1AE86AD225FA2880004891EC /* Test Data */,
-				1AE86B7B25FA2B0B004891EC /* TestData.swift */,
-				1AE86B6E25FA28C4004891EC /* Track.swift */,
-				1AE86B7825FA2A76004891EC /* TrackReader.swift */,
-				F69C462725FF92BF00D773C5 /* LiveMapTrack.swift */,
 			);
 			path = OnLock;
 			sourceTree = "<group>";
@@ -336,6 +332,21 @@
 				1AE86B0025FA2880004891EC /* wabe violett-strecke 4.gpx */,
 			);
 			path = "Test Data";
+			sourceTree = "<group>";
+		};
+		F63BCBFC26667CE300BDC2CC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1A62AA3926021B8600BC19C9 /* Graph.swift */,
+				1A62AA352602165100BC19C9 /* Vector2D.swift */,
+				F669BEC62607623E00065AC1 /* LocationTracker.swift */,
+				F69C462725FF92BF00D773C5 /* LiveMapTrack.swift */,
+				1AE86B7225FA29FD004891EC /* Coordinate.swift */,
+				1AE86B6E25FA28C4004891EC /* Track.swift */,
+				1AE86B7B25FA2B0B004891EC /* TestData.swift */,
+				1AE86B7825FA2A76004891EC /* TrackReader.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -493,6 +504,7 @@
 				1AE86AD025FA2646004891EC /* Map.swift in Sources */,
 				1A62AA3A26021B8600BC19C9 /* Graph.swift in Sources */,
 				1AE86AC025FA25F1004891EC /* OnLockApp.swift in Sources */,
+				F669BEC72607623E00065AC1 /* LocationTracker.swift in Sources */,
 				1AE86B6F25FA28C4004891EC /* Track.swift in Sources */,
 				1AE86B7325FA29FD004891EC /* Coordinate.swift in Sources */,
 				F69C462825FF92BF00D773C5 /* LiveMapTrack.swift in Sources */,
