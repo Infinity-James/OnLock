@@ -60,7 +60,6 @@ internal final class MapData: NSObject, ObservableObject {
         
         let line = MKPolyline(coordinates: liveMapTrack.coordinates, count: liveMapTrack.coordinates.count)
         map.addOverlay(line)
-        
         map.setVisibleMapRect(line.boundingMapRect,
                               edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
                               animated: true)
